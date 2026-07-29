@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>lazy-progressive-image vanilla example</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "lazy-progressive-image": "../../dist/index.js",
+          "lit": "https://esm.sh/lit@3.2.0",
+          "lit/": "https://esm.sh/lit@3.2.0/"
+        }
+      }
+    </script>
+    <script type="module">
+      import "lazy-progressive-image";
+    </script>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        margin: 2rem;
+        line-height: 1.5;
+      }
+
+      lazy-progressive-image {
+        display: block;
+        width: 100%;
+        max-width: 600px;
+        height: 400px;
+        margin: 2rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>lazy-progressive-image vanilla example</h1>
+    <p>Scroll down to trigger lazy loading.</p>
+    <div style="height: 120vh"></div>
+    <lazy-progressive-image
+      src="https://picsum.photos/id/10/800/600"
+      thumbnail="https://picsum.photos/id/10/40/30?blur=2"
+      alt="A forest path"
+      root-margin="100px"
+    ></lazy-progressive-image>
+    <div style="height: 120vh"></div>
+  </body>
+</html>

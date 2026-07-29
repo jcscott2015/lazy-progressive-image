@@ -1,0 +1,20 @@
+{
+  "name": "lazy-progressive-image-vue-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lazy-progressive-image": "workspace:*",
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "typescript": "~6.0.2",
+    "vite": "^5.0.0",
+    "vue-tsc": "^2.0.0"
+  }
+}

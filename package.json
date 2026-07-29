@@ -1,0 +1,79 @@
+{
+  "name": "lazy-progressive-image",
+  "version": "1.0.0",
+  "description": "Universal progressive image loading component for Web Components and React.",
+  "type": "module",
+  "license": "MIT",
+  "author": "John C. Scott",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jcscott2015/lazy-progressive-image.git"
+  },
+  "keywords": [
+    "custom-element",
+    "intersection-observer",
+    "lazy-load",
+    "lazy-progressive-image",
+    "lit",
+    "react",
+    "svelte",
+    "typescript",
+    "vue",
+    "web-component"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js",
+      "require": "./dist/react/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "./dist/index.js",
+    "./dist/index.cjs"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist coverage *.tsbuildinfo",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepack": "npm run build",
+    "prepublishOnly": "pnpm run test:unit && pnpm run build",
+    "test": "pnpm run test:unit && pnpm run test:browser",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:browser": "pnpm run build && web-test-runner"
+  },
+  "dependencies": {
+    "@lit/react": "^1.0.0",
+    "lit": "^3.1.0"
+  },
+  "devDependencies": {
+    "@esm-bundle/chai": "4.3.4-fix.0",
+    "@types/react": "^18.3.0",
+    "@web/dev-server-esbuild": "^2.0.0",
+    "@web/test-runner": "^1.0.0",
+    "@web/test-runner-playwright": "^1.0.0",
+    "happy-dom": "^15.0.0",
+    "playwright": "^1.62.0",
+    "tsup": "^8.5.1",
+    "typescript": "~6.0.2",
+    "vitest": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  }
+}
