@@ -47,7 +47,11 @@ export class LazyProgressiveImage extends LitElement {
     const isExplicitlyEmpty =
       this.src === undefined || this.src === null || this.src.trim() === "";
 
-    if (isExplicitlyEmpty || this._error) {
+    if (isExplicitlyEmpty) {
+      return NoImage();
+    }
+
+    if (this._error && !this.thumbnail) {
       return NoImage();
     }
 
