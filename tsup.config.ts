@@ -14,13 +14,7 @@ export default defineConfig({
 
   // DO NOT bundle React, but DO bundle Lit elements
   external: ["react"],
-  noExternal: [
-    "lit",
-    "@lit/react",
-    "lit-html",
-    "lit-element",
-    "@lit/reactive-element",
-  ],
+  noExternal: ["lit", "lit-html", "lit-element", "@lit/reactive-element"],
 
   target: "es2022",
   esbuildOptions(options) {
