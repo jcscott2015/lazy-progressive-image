@@ -107,6 +107,21 @@ export function Example() {
 
 Use the wrapper when you want TypeScript JSX types and `onLoad`/`onError` props. Use the direct element when you prefer zero abstraction and only need standard attributes.
 
+If you want to reference the React props type explicitly, import it from the React entrypoint:
+
+```tsx
+import {
+  LazyProgressiveImage,
+  type LazyProgressiveImageProps,
+} from "lazy-progressive-image/react";
+
+const props: LazyProgressiveImageProps = {
+  src: "https://example.com/full.jpg",
+  thumbnail: "https://example.com/thumb.jpg",
+  alt: "Example image",
+};
+```
+
 ### Vue
 
 ```vue
@@ -138,6 +153,30 @@ import { LazyProgressiveImage } from "lazy-progressive-image";
   root-margin="100px"
 ></lazy-progressive-image>
 ```
+
+## Styling with CSS custom properties
+
+The component exposes a small set of CSS custom properties so you can override its appearance from a parent page without reaching into its internal shadow DOM.
+
+```html
+<style>
+  lazy-progressive-image {
+    --lpi-width: 320px;
+    --lpi-height: 220px;
+    --lpi-image-border-radius: 0;
+    --lpi-image-shadow: none;
+    --lpi-thumbnail-blur: 8px;
+    --lpi-image-object-fit: contain;
+  }
+</style>
+```
+
+Useful properties include:
+
+- `--lpi-width` and `--lpi-height` for the component box
+- `--lpi-image-object-fit`, `--lpi-image-shadow`, `--lpi-image-border-radius`, and `--lpi-image-filter` for the full image
+- `--lpi-thumbnail-opacity`, `--lpi-thumbnail-filter`, and `--lpi-thumbnail-blur` for the thumbnail
+- `--lpi-image-opacity`, `--lpi-image-transition`, and `--lpi-thumbnail-transition` for transition behavior
 
 ## Examples
 

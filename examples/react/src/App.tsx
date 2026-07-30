@@ -15,7 +15,7 @@ export default function App() {
       <div style={{ height: "120vh" }} />
       <LazyProgressiveImage
         src="https://picsum.photos/id/10/800/600"
-        thumbnail="https://picsum.photos/id/10/40/30?blur=2"
+        thumbnail="https://picsum.photos/id/10/40/30"
         alt="A forest path"
         style={{
           display: "block",

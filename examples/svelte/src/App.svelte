@@ -10,7 +10,7 @@
   <div style="height: 120vh;"></div>
   <lazy-progressive-image
     src="https://picsum.photos/id/10/800/600"
-    thumbnail="https://picsum.photos/id/10/40/30?blur=2"
+    thumbnail="https://picsum.photos/id/10/40/30"
     alt="A forest path"
     root-margin="100px"
     style="display: block; width: 100%; max-width: 600px; height: 400px; margin: 2rem 0;"

@@ -11,6 +11,9 @@
         "useDefineForClassFields": false,
         "moduleResolution": "Bundler",
         "jsx": "react-jsx",
+        "types": [
+            "vitest/globals"
+        ],
         "strict": true,
         "skipLibCheck": true,
         "ignoreDeprecations": "6.0",

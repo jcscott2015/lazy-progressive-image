@@ -66,8 +66,14 @@ describe("<lazy-progressive-image>", () => {
 
     const full = el.shadowRoot!.querySelector(".full") as HTMLImageElement;
     const thumb = el.shadowRoot!.querySelector(".thumb") as HTMLImageElement;
+    const wrapper = el.shadowRoot!.querySelector(
+      ".image-wrapper",
+    ) as HTMLDivElement;
 
     expect(full).to.exist;
     expect(thumb).to.exist;
+    expect(wrapper.getAttribute("part")).to.equal("image-wrapper");
+    expect(thumb.getAttribute("part")).to.equal("thumbnail");
+    expect(full.getAttribute("part")).to.equal("image");
   });
 });

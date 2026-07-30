@@ -12,3 +12,7 @@ export const LazyProgressiveImage = createComponent({
     "image-error": "onError" as const,
   },
 });
+
+export type LazyProgressiveImageProps = React.ComponentProps<
+  typeof LazyProgressiveImage
+>;

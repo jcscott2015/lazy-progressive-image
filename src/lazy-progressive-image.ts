@@ -1,4 +1,4 @@
-import { css, html, LitElement, type PropertyValues } from "lit";
+import { html, LitElement, type PropertyValues } from "lit";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { customElement, property, state } from "lit/decorators.js";
 import { IntersectionController } from "./IntersectionController.js";
@@ -8,41 +8,7 @@ import { NoImage } from "./no-image.js";
 
 @customElement("lazy-progressive-image")
 export class LazyProgressiveImage extends LitElement {
-  static styles = [
-    noImageStyles,
-    styles,
-    css`
-      :host {
-        display: inline-block;
-        width: 300px;
-        height: 200px;
-      }
-      .image-wrapper {
-        position: relative;
-        width: 100%;
-        height: 100%;
-      }
-      .image-wrapper img {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      .thumb {
-        filter: blur(8px);
-        opacity: 1;
-        transition: opacity 0.3s;
-      }
-      .full {
-        opacity: 0;
-        transition: opacity 0.5s;
-      }
-      .full.loaded {
-        opacity: 1;
-      }
-    `,
-  ];
+  static styles = [noImageStyles, styles];
 
   @property({ type: String }) src?: string;
   @property({ type: String }) thumbnail?: string;
@@ -88,12 +54,13 @@ export class LazyProgressiveImage extends LitElement {
     const showThumbnail = this.thumbnail && !this._thumbError && !this._loaded;
 
     return html`
-      <div class="image-wrapper">
+      <div class="image-wrapper" part="image-wrapper">
         ${showThumbnail
           ? html`<img
               class="thumb"
               src=${ifDefined(this.thumbnail)}
               alt=""
+              part="thumbnail"
               @error=${this._handleThumbError}
             />`
           : ""}
@@ -101,6 +68,7 @@ export class LazyProgressiveImage extends LitElement {
           class="full ${this._loaded ? "loaded" : ""}"
           src=${ifDefined(this.src)}
           alt=${this.alt}
+          part="image"
           decoding="async"
           @load=${this._handleLoad}
           @error=${this._handleError}
