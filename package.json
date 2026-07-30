@@ -37,6 +37,11 @@
     },
     "./package.json": "./package.json"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "sideEffects": [
     "./dist/index.js",
     "./dist/index.cjs"
