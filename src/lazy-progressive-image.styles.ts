@@ -26,23 +26,23 @@ export const styles = css`
     filter: var(--lpi-image-filter, none);
   }
 
-  .thumb {
+  .image-wrapper img.thumb {
     opacity: var(--lpi-thumbnail-opacity, 1);
     filter: var(--lpi-thumbnail-filter, blur(var(--lpi-thumbnail-blur, 8px)));
     transition: var(--lpi-thumbnail-transition, opacity 0.3s ease);
     clip-path: inset(0);
   }
 
-  .thumb.loaded {
+  .image-wrapper img.thumb.loaded {
     opacity: 0;
   }
 
-  .full {
+  .image-wrapper img.full {
     opacity: var(--lpi-image-opacity, 0);
     transition: var(--lpi-image-transition, opacity 0.5s ease);
   }
 
-  .full.loaded {
+  .image-wrapper img.full.loaded {
     opacity: 1;
   }
 `;

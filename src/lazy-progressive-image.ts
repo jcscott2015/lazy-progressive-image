@@ -66,6 +66,7 @@ export class LazyProgressiveImage extends LitElement {
               src=${ifDefined(this.thumbnail)}
               alt=""
               part="thumbnail"
+              fetchpriority="high"
               @error=${this._handleThumbError}
             />`
           : ""}
@@ -76,6 +77,7 @@ export class LazyProgressiveImage extends LitElement {
               alt=${this.alt}
               part="image"
               decoding="async"
+              fetchpriority="low"
               @load=${this._handleLoad}
               @error=${this._handleError}
             />`
