@@ -1,6 +1,6 @@
 {
   "name": "lazy-progressive-image",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Universal progressive image loading component for Web Components and React.",
   "type": "module",
   "license": "MIT",
