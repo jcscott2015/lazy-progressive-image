@@ -218,7 +218,11 @@ To run a framework example, follow the `package.json` scripts inside each direct
 - `src?: string`
 - `thumbnail?: string`
 - `alt?: string`
+- `rootMargin?: string` — `IntersectionObserver` root margin (default: `"100px"`)
 - `className?: string`
+- `style?: React.CSSProperties`
+- `onLoad?: (event: Event) => void`
+- `onError?: (event: Event) => void`
 
 ## Local Development
 
