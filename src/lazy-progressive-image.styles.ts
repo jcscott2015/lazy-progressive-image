@@ -30,6 +30,7 @@ export const styles = css`
     opacity: var(--lpi-thumbnail-opacity, 1);
     filter: var(--lpi-thumbnail-filter, blur(var(--lpi-thumbnail-blur, 8px)));
     transition: var(--lpi-thumbnail-transition, opacity 0.3s ease);
+    clip-path: inset(0);
   }
 
   .full {

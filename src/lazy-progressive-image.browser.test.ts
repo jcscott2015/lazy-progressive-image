@@ -48,7 +48,7 @@ describe("<lazy-progressive-image>", () => {
     expect(el.shadowRoot!.querySelector("img")).to.not.exist;
   });
 
-  it("renders images once the element is visible", async () => {
+  it("renders the thumbnail first and then the full image after it loads", async () => {
     render(
       html`
         <lazy-progressive-image
@@ -62,10 +62,15 @@ describe("<lazy-progressive-image>", () => {
 
     const el = container.querySelector("lazy-progressive-image") as HTMLElement;
     await waitFor(() => el.shadowRoot !== null);
-    await waitFor(() => el.shadowRoot!.querySelector("img") !== null);
+    await waitFor(() => el.shadowRoot!.querySelector(".thumb") !== null);
+
+    expect(el.shadowRoot!.querySelector(".full")).to.not.exist;
+
+    const thumb = el.shadowRoot!.querySelector(".thumb") as HTMLImageElement;
+    thumb.dispatchEvent(new Event("load"));
+    await waitFor(() => el.shadowRoot!.querySelector(".full") !== null);
 
     const full = el.shadowRoot!.querySelector(".full") as HTMLImageElement;
-    const thumb = el.shadowRoot!.querySelector(".thumb") as HTMLImageElement;
     const wrapper = el.shadowRoot!.querySelector(
       ".image-wrapper",
     ) as HTMLDivElement;

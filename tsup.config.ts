@@ -11,7 +11,17 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   minify: true,
-  external: ["lit", "react", "@lit/react"],
+
+  // DO NOT bundle React, but DO bundle Lit elements
+  external: ["react"],
+  noExternal: [
+    "lit",
+    "@lit/react",
+    "lit-html",
+    "lit-element",
+    "@lit/reactive-element",
+  ],
+
   target: "es2022",
   esbuildOptions(options) {
     options.keepNames = true;

@@ -57,17 +57,16 @@
     "test:unit:watch": "vitest",
     "test:browser": "pnpm run build && web-test-runner"
   },
-  "dependencies": {
-    "@lit/react": "^1.0.0",
-    "lit": "^3.1.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@esm-bundle/chai": "4.3.4-fix.0",
+    "@lit/react": "^1.0.0",
     "@types/react": "^18.3.0",
     "@web/dev-server-esbuild": "^2.0.0",
     "@web/test-runner": "^1.0.0",
     "@web/test-runner-playwright": "^1.0.0",
     "happy-dom": "^15.0.0",
+    "lit": "^3.1.0",
     "playwright": "^1.62.0",
     "tsup": "^8.5.1",
     "typescript": "~6.0.2",

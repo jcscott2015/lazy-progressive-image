@@ -34,6 +34,7 @@ export class LazyProgressiveImage extends LitElement {
   @state() private _loaded = false;
   @state() private _error = false;
   @state() private _thumbError = false;
+  @state() private _thumbnailLoaded = false;
 
   private _loadStartTime = 0;
 
@@ -51,7 +52,12 @@ export class LazyProgressiveImage extends LitElement {
       return NoImage();
     }
 
-    const showThumbnail = this.thumbnail && !this._thumbError && !this._loaded;
+    const showThumbnail =
+      Boolean(this.thumbnail) && !this._thumbError && !this._loaded;
+    const showFull =
+      Boolean(this.src) &&
+      !this._error &&
+      (this._thumbnailLoaded || !this.thumbnail || this._thumbError);
 
     return html`
       <div class="image-wrapper" part="image-wrapper">
@@ -61,18 +67,21 @@ export class LazyProgressiveImage extends LitElement {
               src=${ifDefined(this.thumbnail)}
               alt=""
               part="thumbnail"
+              @load=${this._handleThumbLoad}
               @error=${this._handleThumbError}
             />`
           : ""}
-        <img
-          class="full ${this._loaded ? "loaded" : ""}"
-          src=${ifDefined(this.src)}
-          alt=${this.alt}
-          part="image"
-          decoding="async"
-          @load=${this._handleLoad}
-          @error=${this._handleError}
-        />
+        ${showFull
+          ? html`<img
+              class="full ${this._loaded ? "loaded" : ""}"
+              src=${ifDefined(this.src)}
+              alt=${this.alt}
+              part="image"
+              decoding="async"
+              @load=${this._handleLoad}
+              @error=${this._handleError}
+            />`
+          : ""}
       </div>
     `;
   }
@@ -81,6 +90,7 @@ export class LazyProgressiveImage extends LitElement {
     this._loaded = false;
     this._error = false;
     this._thumbError = false;
+    this._thumbnailLoaded = false;
     this._loadStartTime = performance.now();
   }
 
@@ -101,6 +111,10 @@ export class LazyProgressiveImage extends LitElement {
 
   private _handleError() {
     this._error = true;
+  }
+
+  private _handleThumbLoad() {
+    this._thumbnailLoaded = true;
   }
 
   private _handleThumbError() {
