@@ -34,7 +34,6 @@ export class LazyProgressiveImage extends LitElement {
   @state() private _loaded = false;
   @state() private _error = false;
   @state() private _thumbError = false;
-  @state() private _thumbnailLoaded = false;
 
   private _loadStartTime = 0;
 
@@ -52,22 +51,17 @@ export class LazyProgressiveImage extends LitElement {
       return NoImage();
     }
 
-    const showThumbnail =
-      Boolean(this.thumbnail) && !this._thumbError && !this._loaded;
-    const showFull =
-      Boolean(this.src) &&
-      !this._error &&
-      (this._thumbnailLoaded || !this.thumbnail || this._thumbError);
+    const showThumbnail = Boolean(this.thumbnail) && !this._thumbError;
+    const showFull = Boolean(this.src) && !this._error;
 
     return html`
       <div class="image-wrapper" part="image-wrapper">
         ${showThumbnail
           ? html`<img
-              class="thumb"
+              class="thumb ${this._loaded ? "loaded" : ""}"
               src=${ifDefined(this.thumbnail)}
               alt=""
               part="thumbnail"
-              @load=${this._handleThumbLoad}
               @error=${this._handleThumbError}
             />`
           : ""}
@@ -90,7 +84,6 @@ export class LazyProgressiveImage extends LitElement {
     this._loaded = false;
     this._error = false;
     this._thumbError = false;
-    this._thumbnailLoaded = false;
     this._loadStartTime = performance.now();
   }
 
@@ -111,10 +104,6 @@ export class LazyProgressiveImage extends LitElement {
 
   private _handleError() {
     this._error = true;
-  }
-
-  private _handleThumbLoad() {
-    this._thumbnailLoaded = true;
   }
 
   private _handleThumbError() {

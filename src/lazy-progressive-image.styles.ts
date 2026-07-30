@@ -33,6 +33,10 @@ export const styles = css`
     clip-path: inset(0);
   }
 
+  .thumb.loaded {
+    opacity: 0;
+  }
+
   .full {
     opacity: var(--lpi-image-opacity, 0);
     transition: var(--lpi-image-transition, opacity 0.5s ease);
