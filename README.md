@@ -161,22 +161,32 @@ The component exposes a small set of CSS custom properties so you can override i
 ```html
 <style>
   lazy-progressive-image {
-    --lpi-width: 320px;
-    --lpi-height: 220px;
-    --lpi-image-border-radius: 0;
-    --lpi-image-shadow: none;
-    --lpi-thumbnail-blur: 8px;
-    --lpi-image-object-fit: contain;
+    --lpi-image-object-fit: cover;
+    --lpi-image-filter: grayscale(1);
+    --lpi-thumbnail-filter: contrast(1.2) brightness(1.2);
+    --lpi-thumbnail-blur: 20px;
   }
 </style>
 ```
 
 Useful properties include:
 
-- `--lpi-width` and `--lpi-height` for the component box
-- `--lpi-image-object-fit`, `--lpi-image-shadow`, `--lpi-image-border-radius`, and `--lpi-image-filter` for the full image
+- `--lpi-image-object-fit`, and `--lpi-image-filter` for the full image
 - `--lpi-thumbnail-opacity`, `--lpi-thumbnail-filter`, and `--lpi-thumbnail-blur` for the thumbnail
 - `--lpi-image-opacity`, `--lpi-image-transition`, and `--lpi-thumbnail-transition` for transition behavior
+
+The styles for the `lazy-progressive-image` element itself can be overridden with normal CSS properties:
+
+```css
+lazy-progressive-image {
+  display: block;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  height: auto;
+  max-height: 120px;
+  overflow: hidden;
+}
+```
 
 ## Examples
 
