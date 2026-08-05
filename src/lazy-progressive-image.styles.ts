@@ -31,7 +31,7 @@ export const styles = css`
     width: 100%;
     height: 100%;
     opacity: var(--lpi-thumbnail-opacity, 1);
-    filter: var(--lpi-image-filter, none)
+    filter: var(--lpi-image-filter, blur(0px))
       var(--lpi-thumbnail-filter, blur(var(--lpi-thumbnail-blur, 8px)));
     transition: var(--lpi-thumbnail-transition, opacity 0.3s ease);
     clip-path: inset(0);

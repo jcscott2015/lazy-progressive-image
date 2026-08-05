@@ -154,6 +154,96 @@ import { LazyProgressiveImage } from "lazy-progressive-image";
 ></lazy-progressive-image>
 ```
 
+## Listening for image load events
+
+The component dispatches a bubbling, composed `image-loaded` custom event whenever an image finishes loading. The event `detail` tells you which image variant loaded and its URL:
+
+| Field         | Type                    | Description                                              |
+| ------------- | ----------------------- | -------------------------------------------------------- |
+| `detail.src`  | `string \| undefined`   | The URL of the image that loaded (`src` or `thumbnail`). |
+| `detail.type` | `"full" \| "thumbnail"` | Which variant loaded.                                    |
+
+### Vanilla HTML/JS
+
+```js
+const image = document.querySelector("lazy-progressive-image");
+
+image.addEventListener("image-loaded", (event) => {
+  const { src, type } = event.detail;
+  console.log(`${type} image loaded:`, src);
+});
+```
+
+### React
+
+With the React wrapper, use the `onLoad` prop:
+
+```tsx
+import { LazyProgressiveImage } from "lazy-progressive-image/react";
+
+<LazyProgressiveImage
+  src="https://example.com/full.jpg"
+  thumbnail="https://example.com/thumb.jpg"
+  alt="Example image"
+  onLoad={(event) => {
+    const { src, type } = (event as CustomEvent).detail;
+    console.log(`${type} image loaded:`, src);
+  }}
+/>;
+```
+
+When using the custom element directly in React 19, attach the listener via `ref`:
+
+```tsx
+import "lazy-progressive-image";
+
+<lazy-progressive-image
+  ref={(el) => {
+    el?.addEventListener("image-loaded", (e) => {
+      const { src, type } = (e as CustomEvent).detail;
+      console.log(`${type} image loaded:`, src);
+    });
+  }}
+  src="https://example.com/full.jpg"
+  thumbnail="https://example.com/thumb.jpg"
+  alt="Example image"
+></lazy-progressive-image>;
+```
+
+### Vue
+
+```vue
+<template>
+  <lazy-progressive-image
+    src="https://example.com/full.jpg"
+    thumbnail="https://example.com/thumb.jpg"
+    alt="Example image"
+    @image-loaded="onImageLoaded"
+  />
+</template>
+
+<script setup>
+function onImageLoaded(event) {
+  const { src, type } = event.detail;
+  console.log(`${type} image loaded:`, src);
+}
+</script>
+```
+
+### Svelte
+
+```svelte
+<lazy-progressive-image
+  src="https://example.com/full.jpg"
+  thumbnail="https://example.com/thumb.jpg"
+  alt="Example image"
+  on:image-loaded={(event) => {
+    const { src, type } = event.detail;
+    console.log(`${type} image loaded:`, src);
+  }}
+/>
+```
+
 ## Styling with CSS custom properties
 
 The component exposes a small set of CSS custom properties so you can override its appearance from a parent page without reaching into its internal shadow DOM.

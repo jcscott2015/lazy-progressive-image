@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { ReactiveElement } from "lit";
-import { IntersectionController } from "./IntersectionController.js";
+import { IntersectionController } from "./intersection-controller.js";
 
 class FakeHost extends ReactiveElement {
   requestUpdateCalled = 0;
