@@ -2,28 +2,54 @@ import { expect } from "@esm-bundle/chai";
 import { html, render } from "lit";
 import "../dist/index.js";
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const waitFor = async (predicate: () => boolean, timeout = 2000) => {
+const delay = () => new Promise((resolve) => setTimeout(resolve, 0));
+const waitUntil = async (predicate: () => boolean, timeout = 2000) => {
   const start = performance.now();
-  while (!predicate()) {
-    if (performance.now() - start > timeout) {
-      throw new Error("waitFor timeout");
+
+  while (true) {
+    try {
+      if (predicate()) return; // Success!
+    } catch (e) {
+      // Ignore inner errors (like reading properties of null) and retry
     }
-    await delay(10);
+
+    if (performance.now() - start > timeout) {
+      throw new Error("waitUntil timeout exceeded");
+    }
+
+    await delay(); // Yields control back to browser layout engine
   }
 };
 
 describe("<lazy-progressive-image>", () => {
   let container: HTMLDivElement;
+  const originalIntersectionObserver = globalThis.IntersectionObserver;
 
   beforeEach(() => {
     container = document.createElement("div");
-    container.style.height = "100vh";
     document.body.appendChild(container);
+
+    globalThis.IntersectionObserver = class FakeIntersectionObserver {
+      root = null;
+      rootMargin = "0px";
+      thresholds = [];
+
+      constructor(private callback: IntersectionObserverCallback) {}
+
+      observe(target: Element) {
+        // Force an intersection event immediately upon observation
+        this.callback(
+          [{ isIntersecting: true, target } as IntersectionObserverEntry],
+          this as unknown as IntersectionObserver,
+        );
+      }
+      unobserve() {}
+      disconnect() {}
+    } as unknown as typeof IntersectionObserver;
   });
 
   afterEach(() => {
+    globalThis.IntersectionObserver = originalIntersectionObserver;
     container.remove();
   });
 
@@ -40,10 +66,12 @@ describe("<lazy-progressive-image>", () => {
     );
 
     const el = container.querySelector("lazy-progressive-image") as HTMLElement;
-    await waitFor(() => el.shadowRoot !== null);
-    await waitFor(
-      () => el.shadowRoot!.querySelector(".noimage-wrapper") !== null,
-    );
+    await waitUntil(() => {
+      return (
+        el.shadowRoot !== null &&
+        el.shadowRoot!.querySelector(".noimage-wrapper") !== null
+      );
+    });
 
     expect(el.shadowRoot!.querySelector(".noimage-wrapper")).to.exist;
     expect(el.shadowRoot!.querySelector("img")).to.not.exist;
@@ -62,8 +90,14 @@ describe("<lazy-progressive-image>", () => {
     );
 
     const el = container.querySelector("lazy-progressive-image") as HTMLElement;
-    await waitFor(() => el.shadowRoot !== null);
-    await waitFor(() => el.shadowRoot!.querySelector(".thumb") !== null);
+    await waitUntil(() => {
+      return (
+        el.shadowRoot !== null &&
+        el.shadowRoot.querySelector(".full") !== null &&
+        el.shadowRoot.querySelector(".thumb") !== null &&
+        el.shadowRoot.querySelector(".image-wrapper") !== null
+      );
+    });
 
     const full = el.shadowRoot!.querySelector(".full") as HTMLImageElement;
     const thumb = el.shadowRoot!.querySelector(".thumb") as HTMLImageElement;
@@ -93,12 +127,23 @@ describe("<lazy-progressive-image>", () => {
     );
 
     const el = container.querySelector("lazy-progressive-image") as HTMLElement;
-    await waitFor(() => el.shadowRoot !== null);
-    await waitFor(() => el.shadowRoot!.querySelector(".thumb") !== null);
+
+    // 1️⃣ Wait only for the initial structural elements to boot
+    await waitUntil(() => {
+      return (
+        el.shadowRoot !== null &&
+        el.shadowRoot.querySelector(".full") !== null &&
+        el.shadowRoot.querySelector(".thumb") !== null
+      );
+    });
 
     const full = el.shadowRoot!.querySelector(".full") as HTMLImageElement;
+
+    // 2️⃣ Trigger the error event on the full image element
     full.dispatchEvent(new Event("error"));
-    await waitFor(() => el.shadowRoot!.querySelector(".thumb") !== null);
+
+    // 3️⃣ Assert that the fallback wrapper WAS NOT added, and thumbnail stays visible
+    await new Promise((resolve) => requestAnimationFrame(resolve));
 
     expect(el.shadowRoot!.querySelector(".noimage-wrapper")).to.not.exist;
     expect(el.shadowRoot!.querySelector(".thumb")).to.exist;
@@ -116,8 +161,11 @@ describe("<lazy-progressive-image>", () => {
     );
 
     const el = container.querySelector("lazy-progressive-image") as HTMLElement;
-    await waitFor(() => el.shadowRoot !== null);
-    await waitFor(() => el.shadowRoot!.querySelector(".full") !== null);
+    await waitUntil(() => {
+      return (
+        el.shadowRoot !== null && el.shadowRoot.querySelector(".full") !== null
+      );
+    });
 
     const full = el.shadowRoot!.querySelector(".full") as HTMLImageElement;
     let received: CustomEvent | undefined;
@@ -130,7 +178,7 @@ describe("<lazy-progressive-image>", () => {
       Promise.resolve();
     full.dispatchEvent(new Event("load"));
 
-    await waitFor(() => received !== undefined);
+    await waitUntil(() => received !== undefined);
 
     expect(received!.detail.type).to.equal("full");
     expect(received!.detail.src).to.equal(full.src);
@@ -151,8 +199,11 @@ describe("<lazy-progressive-image>", () => {
     );
 
     const el = container.querySelector("lazy-progressive-image") as HTMLElement;
-    await waitFor(() => el.shadowRoot !== null);
-    await waitFor(() => el.shadowRoot!.querySelector(".thumb") !== null);
+    await waitUntil(() => {
+      return (
+        el.shadowRoot !== null && el.shadowRoot.querySelector(".thumb") !== null
+      );
+    });
 
     const thumb = el.shadowRoot!.querySelector(".thumb") as HTMLImageElement;
     let received: CustomEvent | undefined;
@@ -165,7 +216,7 @@ describe("<lazy-progressive-image>", () => {
       Promise.resolve();
     thumb.dispatchEvent(new Event("load"));
 
-    await waitFor(() => received !== undefined);
+    await waitUntil(() => received !== undefined);
 
     expect(received!.detail.type).to.equal("thumbnail");
     expect(received!.detail.src).to.equal(thumb.src);

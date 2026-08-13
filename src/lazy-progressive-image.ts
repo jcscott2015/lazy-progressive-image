@@ -36,17 +36,23 @@ export class LazyProgressiveImage extends LitElement {
   });
 
   @state() private _loaded = false;
-  @state() private _thumbnailLoaded = false;
   @state() private _error = false;
   @state() private _thumbError = false;
+  @state() private _fullImageCached = false;
+
+  private static _loadedFullImageSources = new Set<string>();
+
+  protected willUpdate(changed: PropertyValues<this>) {
+    if (changed.has("src")) {
+      this._resetImageState();
+      this._fullImageCached = this._isSourceLoaded(this.src);
+    }
+  }
 
   protected updated(changed: PropertyValues<this>) {
     super.updated(changed);
     if (changed.has("rootMargin")) {
       this._intersection.setOptions({ rootMargin: this.rootMargin });
-    }
-    if (changed.has("src")) {
-      this._resetImageState();
     }
   }
 
@@ -59,8 +65,16 @@ export class LazyProgressiveImage extends LitElement {
       return NoImage();
     }
 
+    const isFullInView = this._intersection.value;
+
+    // Thumbnail stays mounted until the full image has actually loaded —
+    // gating it on intersection/cache instead would unmount it the instant
+    // the element comes into view, before the full image has a chance to load.
     const showThumbnail = Boolean(this.thumbnail) && !this._thumbError;
-    const showFull = Boolean(this.src) && !this._error;
+    const showFull =
+      Boolean(this.src) &&
+      !this._error &&
+      (this._fullImageCached || isFullInView);
 
     return html`
       <div class="image-wrapper" part="image-wrapper">
@@ -103,9 +117,13 @@ export class LazyProgressiveImage extends LitElement {
 
   private _resetImageState() {
     this._loaded = false;
-    this._thumbnailLoaded = false;
     this._error = false;
     this._thumbError = false;
+    this._fullImageCached = false;
+  }
+
+  private _isSourceLoaded(src?: string) {
+    return !!src && LazyProgressiveImage._loadedFullImageSources.has(src);
   }
 
   private _handleLoad(event: Event) {
@@ -132,8 +150,10 @@ export class LazyProgressiveImage extends LitElement {
       requestAnimationFrame(() => {
         if (type === "full") {
           this._loaded = true;
-        } else {
-          this._thumbnailLoaded = true;
+          if (this.src) {
+            LazyProgressiveImage._loadedFullImageSources.add(this.src);
+            this._fullImageCached = true;
+          }
         }
         dispatchImageLoaded(
           this,

@@ -18,12 +18,12 @@ It renders a blurred thumbnail first, lazy-loads the full image when visible, an
 ## How Lazy Loading Works
 
 1. The component mounts a wrapper element and watches it with `IntersectionObserver`.
-2. The full image is not rendered until the wrapper is near/in view (`rootMargin: 100px`).
-3. When visible, the thumb (if provided) and full image are rendered.
+2. The thumbnail (if provided) renders immediately as a placeholder, independent of visibility — it stays mounted until the full image has actually loaded.
+3. The full image is not rendered (and not fetched) until the wrapper is near/in view (`rootMargin: 100px`) — **unless** that exact `src` has already finished loading elsewhere on the page during this session, in which case it renders right away without waiting for intersection.
 4. On full image `load`, the component calls `HTMLImageElement.decode()` when available.
-5. The full image is shown only after decode completes (or immediately after `load` on browsers without `decode`).
+5. Once decode completes (or immediately after `load` on browsers without `decode`), the full image fades in and the thumbnail fades out via CSS transition.
 
-This means visibility controls network/render timing, and `decode()` helps avoid showing a partially decoded full image.
+This means visibility (or a known-loaded cache hit) controls network/render timing, and `decode()` helps avoid showing a partially decoded full image.
 
 ## Install
 
@@ -272,11 +272,12 @@ lazy-progressive-image {
   display: block;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
   width: 100%;
-  height: auto;
-  max-height: 120px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
 }
 ```
+
+> **Note:** the component needs a definite height to have somewhere to render the thumbnail placeholder before any image has loaded (the default `:host` sizing is a fixed `300px` × `200px`). When overriding size from the consumer, set an explicit `height` or an `aspect-ratio` as shown above — `height: auto` alone will collapse to 0px until the full image loads, since the placeholder is positioned absolutely and can't establish its own height.
 
 ## Examples
 

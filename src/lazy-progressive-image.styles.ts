@@ -11,7 +11,10 @@ export const styles = css`
   .image-wrapper {
     position: relative;
     width: 100%;
-    height: auto;
+    /* Explicit height (not auto) — .thumb is absolutely positioned/out of
+       flow, so when .full isn't mounted yet this wrapper would otherwise
+       collapse to 0 height and hide the thumbnail entirely. */
+    height: 100%;
     display: block;
   }
 
