@@ -1,0 +1,3 @@
+# Block any unused files sitting in your root directory
+image-visibility-controller.ts
+loading-spinner.ts

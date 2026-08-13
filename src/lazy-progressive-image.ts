@@ -5,7 +5,6 @@ import { IntersectionController } from "./intersection-controller.js";
 import { styles } from "./lazy-progressive-image.styles.js";
 import { noImageStyles } from "./no-image.styles.js";
 import { NoImage } from "./no-image.js";
-import "./loading-spinner.js";
 
 const dispatchImageLoaded = (
   host: LazyProgressiveImage,
